@@ -17,8 +17,8 @@ int main()
 
 int sum(std::vector<int> arr)
 {
-    if (arr.size() == 1)
-        return arr[0];
+    if (arr.empty())
+        return 0;
     
     int firstElement = arr[0];
     arr.erase(arr.begin()); // remove the first element
