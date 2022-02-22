@@ -9,14 +9,14 @@ void print(const std::vector<T>& arr);
 
 int main()
 {
-    std::vector<int> arr = {3, 5, 2, 1, 4};
+    std::vector<int> arr = {3, 5, 2, 1, 4, 2, 7};
     
     std::cout << "Before sorted: \n";
     print(arr);
 
     std::cout << "Using quick sort: \n";
     print(quickSort(arr));
-    
+
     return 0;
 }
 
@@ -26,22 +26,28 @@ std::vector<T> quickSort(std::vector<T> arr)
     if (arr.size() < 2)
         return arr;
 
-    T pivot = arr[0];
+    // pivot points to an element somewhere in the middle.
+    const T* pivot = &arr.front() + arr.size() / 2 - 1;
     std::vector<T> less;
     std::vector<T> greater;
 
-    for (int i = 1; i < arr.size(); i++)
+    // iterate from the first element to the last element using pointer
+    for (const T* item = &arr.front(); item <= &arr.back(); item++)
     {
-        if (arr[i] < pivot)
-            less.push_back(arr[i]);
+        // skip pivot element
+        if (item == pivot)
+            continue;
+        
+        if (*item <= *pivot)
+            less.push_back(*item);
         else
-            greater.push_back(arr[i]);
+            greater.push_back(*item);
     }
 
     std::vector<T> sortedLess = quickSort(less);
     std::vector<T> sortedGreater = quickSort(greater);
 
-    sortedLess.push_back(pivot);
+    sortedLess.push_back(*pivot);
     sortedLess.insert(sortedLess.end(), sortedGreater.begin(),
                       sortedGreater.end());
     
