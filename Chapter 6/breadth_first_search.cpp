@@ -1,17 +1,18 @@
 #include <iostream>
 #include <vector>
 #include <map>
+#include <algorithm>
 #include <queue>
 
-typedef std::vector<std::string> listOfPeople; 
+typedef std::vector<std::string> listOfPeople;
 
 bool isSeller(const std::string &person);
 
 bool breadthFirstSearch(std::queue<std::string> &searchQueue,
                         std::map<std::string, listOfPeople> &graph);
 
-void addNamesToQueue(std::queue<std::string> &searchQueue, 
-                    listOfPeople &peopleList);
+void addNamesToQueue(std::queue<std::string> &searchQueue,
+                     listOfPeople &peopleList);
 
 int main()
 {
@@ -39,7 +40,6 @@ int main()
     }
 
     return 0;
-
 }
 
 bool isSeller(const std::string &person)
@@ -48,30 +48,36 @@ bool isSeller(const std::string &person)
     return (*std::prev(person.end()) == 'm');
 }
 
-void addNamesToQueue(std::queue<std::string> &searchQueue, 
-                    listOfPeople &peopleList)
+void addNamesToQueue(std::queue<std::string> &searchQueue,
+                     listOfPeople &peopleList)
 {
     for (auto people : peopleList)
         searchQueue.push(people);
 }
 
-
 bool breadthFirstSearch(std::queue<std::string> &searchQueue,
                         std::map<std::string, listOfPeople> &graph)
 {
+    listOfPeople searched;
+
     while (!searchQueue.empty())
     {
         std::string person = searchQueue.front();
         searchQueue.pop();
 
-        if (isSeller(person))
+        // check if person is not present in the list of searched person
+        if (std::find(searched.begin(), searched.end(), person) == searched.end())
         {
-            std::cout << person << " is the seller\n";
-            return true;
-        }
-        else
-        {
-            addNamesToQueue(searchQueue, graph[person]);
+            if (isSeller(person))
+            {
+                std::cout << person << " is the seller\n";
+                return true;
+            }
+            else
+            {
+                addNamesToQueue(searchQueue, graph[person]);
+                searched.push_back(person);
+            }
         }
     }
 
